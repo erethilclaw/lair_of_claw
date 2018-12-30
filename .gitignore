@@ -5,6 +5,14 @@
 /public/bundles/
 /var/
 /vendor/
+
+###> enviorament###
+.env
+.idea/
+.*
+!.gitignore
+!.htaccess
+*~
 ###< symfony/framework-bundle ###
 
 ###> symfony/web-server-bundle ###
