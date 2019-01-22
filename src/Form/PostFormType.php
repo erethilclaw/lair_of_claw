@@ -14,6 +14,7 @@ class PostFormType extends AbstractType {
 	public function buildForm( FormBuilderInterface $builder, array $options ) {
 		$builder
 			->add('title', TextType::class)
+			->add('slug')
 			->add('content', TextareaType::class)
 			;
 	}

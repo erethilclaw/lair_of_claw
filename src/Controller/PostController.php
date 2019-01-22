@@ -17,10 +17,9 @@ class PostController extends AbstractController {
 		if ($form->isSubmitted() && $form->isValid()) {
 			$post = new Post();
 			$post = $form->getData();
-			//toremove
-			$post->setSlug('puta');
 			$em->persist($post);
 			$em->flush();
+			$this->addFlash('success', 'Article Created! Knowledge is power!');
 
 			return $this->redirectToRoute('listPost');
 		}
@@ -35,6 +34,15 @@ class PostController extends AbstractController {
 
 		return $this->render('post/listPost.html.twig', [
 			'posts'=>$posts,
+		]);
+	}
+
+	public function viewPost($slug){
+		$post = $this->getDoctrine()->getRepository(Post::class)->findBy([
+			'slug'=>$slug
+		]);
+		return $this->render('post/viewPost.html.twig', [
+			'posts'=>$post,
 		]);
 	}
 }

@@ -7,3 +7,6 @@ newPost:
 listPost:
     path: /admin/post/list
     controller: App\Controller\PostController:listPost
+viewPost:
+    path: /admin/post/{slug}
+    controller: App\Controller\PostController:viewPost

@@ -5,15 +5,15 @@
         <thead>
         <tr>
             <th>title</th>
-            <th>create</th>
-            <th>publish date</th>
+            <th>view</th>
+            <th>delete</th>
         </tr>
         </thead>
         <tbody>
             {% for post in posts %}
                 <tr>
                     <td>{{ post.title }}</td>
-                    <td></td>
+                    <td><a href="{{ path('viewPost', { 'slug':post.slug}) }}">{{ post.slug }}</a></td>
                     <td></td>
                 </tr>
             {% endfor %}
