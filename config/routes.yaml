@@ -3,4 +3,7 @@ wellcome:
     controller: App\Controller\WellcomeController::wellcome
 newPost:
     path: /admin/post/new
-    controller: App\Controller\PostController:new
+    controller: App\Controller\PostController:newPost
+listPost:
+    path: /admin/post/list
+    controller: App\Controller\PostController:listPost
