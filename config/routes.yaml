@@ -13,3 +13,6 @@ viewPost:
 editPost:
     path: /admin/editPost/{slug}
     controller: App\Controller\PostController:editPost
+deletePost:
+    path: /admin/deletePost/{slug}
+    controller: App\Controller\PostController:deletePost

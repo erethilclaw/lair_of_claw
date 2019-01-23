@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Post;
 use App\Form\PostFormType;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -62,5 +63,18 @@ class PostController extends AbstractController {
 		return $this->render('post/editPost.html.twig', [
 			'postForm' => $form->createView(),
 		]);
+	}
+
+	public function deletePost(PostRepository $post_repository, $slug, EntityManagerInterface $em, Request $request){
+		$post = $post_repository->findOneBy([
+			'slug'=>$slug
+		]);
+		if (!$post) {
+            throw $this->createNotFoundException("Destinatari no trobat");
+        }
+        $em->remove($post);
+		$em->flush();
+		$this->addFlash('success', 'Article deleted!');
+		return $this->redirectToRoute('listPost');
 	}
 }
