@@ -10,3 +10,6 @@ listPost:
 viewPost:
     path: /admin/post/{slug}
     controller: App\Controller\PostController:viewPost
+editPost:
+    path: /admin/editPost/{slug}
+    controller: App\Controller\PostController:editPost

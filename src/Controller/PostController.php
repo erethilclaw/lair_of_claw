@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Post;
 use App\Form\PostFormType;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,7 +14,6 @@ class PostController extends AbstractController {
 		$form = $this->createForm(PostFormType::class);
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
-			$post = new Post();
 			$post = $form->getData();
 			$em->persist($post);
 			$em->flush();
@@ -37,12 +35,32 @@ class PostController extends AbstractController {
 		]);
 	}
 
-	public function viewPost($slug){
-		$post = $this->getDoctrine()->getRepository(Post::class)->findBy([
+	public function viewPost(PostRepository $post_repository, $slug){
+		$post = $post_repository->findOneBy([
 			'slug'=>$slug
 		]);
 		return $this->render('post/viewPost.html.twig', [
-			'posts'=>$post,
+			'post'=>$post,
+		]);
+	}
+
+	public function editPost(PostRepository $post_repository, $slug, EntityManagerInterface $em, Request $request){
+		$post = $post_repository->findOneBy([
+			'slug'=>$slug
+		]);
+		$form = $this->createForm(PostFormType::class, $post);
+		$form->handleRequest($request);
+		if ($form->isSubmitted() && $form->isValid()) {
+			$post = $form->getData();
+			$em->persist($post);
+			$em->flush();
+			$this->addFlash('success', 'Article Edited!!');
+
+			return $this->redirectToRoute('listPost');
+		}
+
+		return $this->render('post/editPost.html.twig', [
+			'postForm' => $form->createView(),
 		]);
 	}
 }

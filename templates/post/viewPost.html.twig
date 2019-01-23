@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
+{% block title %}View Post{% endblock %}
 {% block body %}
     <h1>view Post</h1>
-    {% for post in posts %}
+    <h2><a href="{{ path('listPost') }}">return list</a></h2>
     <p>{{ post.title }}</p>
     <p>{{ post.content }}</p>
-        {% endfor %}
 {% endblock %}

@@ -1,11 +1,14 @@
 {% extends 'base.html.twig' %}
+{% block title %}List Post{% endblock %}
 {% block body %}
     <h1>list Post</h1>
+    <h2><a href="{{ path('newPost') }}">Create Post</a></h2>
     <table>
         <thead>
         <tr>
             <th>title</th>
             <th>view</th>
+            <th>edit</th>
             <th>delete</th>
         </tr>
         </thead>
@@ -14,6 +17,7 @@
                 <tr>
                     <td>{{ post.title }}</td>
                     <td><a href="{{ path('viewPost', { 'slug':post.slug}) }}">{{ post.slug }}</a></td>
+                    <td><a href="{{ path('editPost', { 'slug':post.slug}) }}">edit</a></td>
                     <td></td>
                 </tr>
             {% endfor %}

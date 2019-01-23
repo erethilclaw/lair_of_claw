@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block title %}Edit Post{% endblock %}
+{% block body %}
+    <h1>Edit Post</h1>
+    {{ form_start(postForm) }}
+        {{ form_widget(postForm) }}
+    <button type="submit">Edit</button><button><a href="{{ path('listPost') }}">cancel</a></button>
+    {{ form_end(postForm) }}
+{% endblock %}
