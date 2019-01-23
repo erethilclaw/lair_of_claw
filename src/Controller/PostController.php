@@ -36,19 +36,15 @@ class PostController extends AbstractController {
 		]);
 	}
 
-	public function viewPost(PostRepository $post_repository, $slug){
-		$post = $post_repository->findOneBy([
-			'slug'=>$slug
-		]);
+	public function viewPost($slug){
+		$post = $this->searchPostBySlug($slug);
 		return $this->render('post/viewPost.html.twig', [
 			'post'=>$post,
 		]);
 	}
 
-	public function editPost(PostRepository $post_repository, $slug, EntityManagerInterface $em, Request $request){
-		$post = $post_repository->findOneBy([
-			'slug'=>$slug
-		]);
+	public function editPost($slug, EntityManagerInterface $em, Request $request){
+		$post = $this->searchPostBySlug($slug);
 		$form = $this->createForm(PostFormType::class, $post);
 		$form->handleRequest($request);
 		if ($form->isSubmitted() && $form->isValid()) {
@@ -65,10 +61,8 @@ class PostController extends AbstractController {
 		]);
 	}
 
-	public function deletePost(PostRepository $post_repository, $slug, EntityManagerInterface $em, Request $request){
-		$post = $post_repository->findOneBy([
-			'slug'=>$slug
-		]);
+	public function deletePost($slug, EntityManagerInterface $em){
+		$post = $this->searchPostBySlug($slug);
 		if (!$post) {
             throw $this->createNotFoundException("Destinatari no trobat");
         }
@@ -76,5 +70,12 @@ class PostController extends AbstractController {
 		$em->flush();
 		$this->addFlash('success', 'Article deleted!');
 		return $this->redirectToRoute('listPost');
+	}
+
+	public function searchPostBySlug($slug){
+		$post_repository = $this->getDoctrine()->getRepository(Post::class);
+		return $post = $post_repository->findOneBy([
+			'slug'=>$slug
+		]);
 	}
 }
