@@ -36,10 +36,28 @@ class Post
      */
     private $publishedAt;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createAt;
+
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $author;
+
+	/**
+	 * Post constructor.
+	 */
+	public function __construct() {
+         		$this->createAt = new \DateTime('now');
+         	}
+
+
+	public function getId(): ?int
+             {
+                 return $this->id;
+             }
 
     public function getTitle(): ?string
     {
@@ -85,6 +103,30 @@ class Post
     public function setPublishedAt(?\DateTimeInterface $publishedAt): self
     {
         $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    public function getCreateAt(): ?\DateTimeInterface
+    {
+        return $this->createAt;
+    }
+
+    public function setCreateAt(\DateTimeInterface $createAt): self
+    {
+        $this->createAt = $createAt;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?string
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?string $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }
