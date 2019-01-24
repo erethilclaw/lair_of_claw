@@ -19,10 +19,22 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
-    public function findBySlug($slug){
+	public function findAllPostByCreateDate(){
+    	return $this->createQueryBuilder('post')
+		    ->orderBy('post.createAt','DESC')
+		    ->getQuery()
+		    ->getResult()
+		    ;
+	}
 
-    }
-
+	public function findAllPostByPublishDate(){
+    	return $this->createQueryBuilder('post')
+		    ->where('post.publishedAt < CURRENT_TIMESTAMP()')
+		    ->orderBy('post.publishedAt','DESC')
+		    ->getQuery()
+		    ->getResult()
+		    ;
+	}
     // /**
     //  * @return Post[] Returns an array of Post objects
     //  */

@@ -29,9 +29,17 @@ class PostController extends AbstractController {
 	}
 
 	public function listPost(PostRepository $post_repository){
-		$posts = $post_repository->findAll();
+		$posts = $post_repository->findAllPostByCreateDate();
 
 		return $this->render('post/listPost.html.twig', [
+			'posts'=>$posts,
+		]);
+	}
+
+	public function listPostFront(PostRepository $post_repository){
+		$posts = $post_repository->findAllPostByPublishDate();
+
+		return $this->render('front/post/webListPost.html.twig', [
 			'posts'=>$posts,
 		]);
 	}
