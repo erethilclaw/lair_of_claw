@@ -15,6 +15,9 @@ class PostFormType extends AbstractType {
 		$builder
 			->add('title', TextType::class)
 			->add('slug')
+			->add('publishedAt',null, [
+				'widget' => 'single_text'
+			])
 			->add('content', TextareaType::class)
 			;
 	}
