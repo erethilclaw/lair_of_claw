@@ -29,7 +29,7 @@ class PostRepository extends ServiceEntityRepository
 
 	public function findAllPostByPublishDate(){
     	return $this->createQueryBuilder('post')
-		    ->where('post.publishedAt < CURRENT_TIMESTAMP()')
+		    ->where('post.publishedAt < CURRENT_TIMESTAMP() AND post.publishedAt IS NOT NULL')
 		    ->orderBy('post.publishedAt','DESC')
 		    ->getQuery()
 		    ->getResult()

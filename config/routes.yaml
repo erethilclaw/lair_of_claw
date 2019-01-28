@@ -1,6 +1,9 @@
 wellcome:
     path: /
     controller: App\Controller\WellcomeController::wellcome
+login:
+    path: /login
+    controller: App\Controller\SecurityController::login
 webPost:
     path: /blog
     controller: App\Controller\PostController:listPostFront
