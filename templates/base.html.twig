@@ -11,6 +11,11 @@
         {% endfor %}
     </head>
     <body>
+    {% if app.user %}
+        <a href="{{ path('logout') }}">logout</a>
+    {% else %}
+        <a href="{{ path('login') }}">login</a>
+    {% endif %}
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>
