@@ -28,27 +28,37 @@ class PostController extends AbstractController {
 		]);
 	}
 
-	public function listPost(PostRepository $post_repository){
+	public function listPost(PostRepository $post_repository, $page = 1, Request $request){
+		$limit = $request->get('limit', 10);
 		$posts = $post_repository->findAllPostByCreateDate();
 
-		return $this->render('post/listPost.html.twig', [
-			'posts'=>$posts,
-		]);
+		return $this->json(
+			[
+				'page'=> $page,
+				'limit'=> $limit,
+				'data' => array_map(function (Post $post) {
+					return $this->generateUrl('editPost',['slug'=>$post->getSlug()]);
+				}, $posts)
+			]
+		);
 	}
 
-	public function listPostFront(PostRepository $post_repository){
+	public function listPostFront(PostRepository $post_repository, $page = 1, Request $request){
+		$limit = $request->get('limit', 10);
 		$posts = $post_repository->findAllPostByPublishDate();
 
-		return $this->render('front/post/webListPost.html.twig', [
-			'posts'=>$posts,
-		]);
+		return $this->json(
+			[
+				'page'=> $page,
+				'limit'=> $limit,
+				'data' => $posts,
+			]
+		);
 	}
 
 	public function viewPost($slug){
 		$post = $this->searchPostBySlug($slug);
-		return $this->render('post/viewPost.html.twig', [
-			'post'=>$post,
-		]);
+		return $this->json($post);
 	}
 
 	public function editPost($slug, EntityManagerInterface $em, Request $request){
