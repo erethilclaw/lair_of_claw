@@ -30,7 +30,9 @@ class PostController extends AbstractController {
 			]
 		);
 	}
-
+	/**
+	 * @Route("/blog", name="webPost", methods={"GET"})
+	 */
 	public function listPostFront(PostRepository $post_repository, $page = 1, Request $request){
 		$limit = $request->get('limit', 10);
 		$posts = $post_repository->findAllPostByPublishDate();
@@ -85,7 +87,7 @@ class PostController extends AbstractController {
 	}
 
 	/**
-	 * @Route("/admin/post/{slug}, name="deletePost", methods={"DELETE"})
+	 * @Route("/admin/post/{slug}", name="deletePost", methods={"DELETE"})
 	 */
 	public function deletePost(Post $post){
 		$em = $this->getDoctrine()->getManager();
