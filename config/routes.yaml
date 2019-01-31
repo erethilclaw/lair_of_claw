@@ -1,26 +1,26 @@
-wellcome:
-    path: /
-    controller: App\Controller\WellcomeController::wellcome
-login:
-    path: /login
-    controller: App\Controller\SecurityController::login
-logout:
-    path: /logout
-webPost:
-    path: /blog
-    controller: App\Controller\PostController:listPostFront
-newPost:
-    path: /admin/post/new
-    controller: App\Controller\PostController:newPost
-listPost:
-    path: /admin/post/list
-    controller: App\Controller\PostController:listPost
-viewPost:
-    path: /admin/post/{slug}
-    controller: App\Controller\PostController:viewPost
-editPost:
-    path: /admin/editPost/{slug}
-    controller: App\Controller\PostController:editPost
-deletePost:
-    path: /admin/deletePost/{slug}
-    controller: App\Controller\PostController:deletePost
+#wellcome:
+#    path: /
+#    controller: App\Controller\WellcomeController::wellcome
+#login:
+#    path: /login
+#    controller: App\Controller\SecurityController::login
+#logout:
+#    path: /logout
+#webPost:
+#    path: /blog
+#    controller: App\Controller\PostController:listPostFront
+#newPost:
+#    path: /admin/post/new
+#    controller: App\Controller\PostController:newPost
+#listPost:
+#    path: /admin/post/list
+#    controller: App\Controller\PostController:listPost
+#viewPost:
+#    path: /admin/post/{slug}
+#    controller: App\Controller\PostController:viewPost
+#editPost:
+#    path: /admin/editPost/{slug}
+#    controller: App\Controller\PostController:editPost
+#deletePost:
+#    path: /admin/deletePost/{slug}
+#    controller: App\Controller\PostController:deletePost
