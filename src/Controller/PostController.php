@@ -6,13 +6,12 @@ use App\Entity\Post;
 use App\Form\PostFormType;
 use App\Repository\PostRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Serializer\Serializer;
 
 class PostController extends AbstractController {
 
@@ -57,8 +56,9 @@ class PostController extends AbstractController {
 	 * @Route("admin/newPost", name="newPost", methods={"POST"})
 	 */
 	public function newPost( Request $request){
-		$serializar = $this->get('serializer');
-		$post = $serializar->deserialize($request->getContent(), Post::class,'json');
+		/** @var  Serializer $serializer */
+		$serializer = $this->get('serializer');
+		$post = $serializer->deserialize($request->getContent(), Post::class, 'json');
 
 		$em = $this->getDoctrine()->getManager();
 		$em->persist($post);
