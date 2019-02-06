@@ -14,7 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Serializer;
 
 class PostController extends AbstractController {
-
+	/**
+	 * @Route("/admin/postList", name="postList", methods={"GET"})
+	 */
 	public function listPost(PostRepository $post_repository, $page = 1, Request $request){
 		$limit = $request->get('limit', 10);
 		$posts = $post_repository->findAllPostByCreateDate();
@@ -67,7 +69,9 @@ class PostController extends AbstractController {
 		return $this->json($post);
 	}
 
-
+	/**
+	 * @Route("/admin/post/edit/{slug}", name="editPost", methods={"GET"})
+	 */
 	public function editPost($slug, EntityManagerInterface $em, Request $request){
 		$post = $this->searchPostBySlug($slug);
 		$form = $this->createForm(PostFormType::class, $post);
