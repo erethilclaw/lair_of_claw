@@ -7,10 +7,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @ApiResource()
+ * @ApiResource(
+ *     itemOperations={"get"},
+ *     collectionOperations={},
+ *     normalizationContext={
+ *     "groups"={"read"}
+ *     }
+ * )
  */
 class User implements UserInterface
 {
@@ -18,16 +25,19 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"read"})
      */
     private $roles = [];
 
@@ -40,16 +50,19 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Groups({"read"})
      */
     private $alias;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="author")
+	 * @Groups({"read"})
 	 */
     private $posts;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author")
+	 * @Groups({"read"})
 	 */
     private $comments;
 
