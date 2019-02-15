@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -18,6 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     "groups"={"read"}
  *     }
  * )
+ * @UniqueEntity(fields={"alias","email"})
  */
 class User implements UserInterface
 {
@@ -32,6 +35,9 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"read"})
+     * @Assert\NotBlank()
+     * @Assert\Email()
+     * @Assert\Length(max="25",min="6")
      */
     private $email;
 
@@ -44,19 +50,34 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/(?=.*[A-Z])(?=.*[0-9]).{7,}/",
+     *     message="Password need at least, mayus, number"
+     * )
      */
     private $password;
 
+	/**
+	 * @Assert\NotBlank()
+	 * @Assert\Expression(
+	 *     "this.getPassword === this.getRetypedPassword()",
+	 *     message="passwords don't match"
+	 * )
+	 */
+    private $retypedPassword;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      * @Groups({"read"})
+     * @Assert\NotBlank()
      */
     private $alias;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="author")
 	 * @Groups({"read"})
+	 * @Assert\Length(max="25",min="6")
 	 */
     private $posts;
 
@@ -189,4 +210,12 @@ class User implements UserInterface
 	}
 
 
+	public function getRetypedPassword() {
+		return $this->retypedPassword;
+	}
+
+
+	public function setRetypedPassword( $retypedPassword ) {
+		$this->retypedPassword = $retypedPassword;
+	}
 }
