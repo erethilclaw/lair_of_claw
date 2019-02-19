@@ -20,7 +20,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     "groups"={"read"}
  *     }
  * )
- * @UniqueEntity(fields={"alias","email"})
+ * @UniqueEntity(fields={"alias"})
+ * @UniqueEntity(fields={"email"})
  */
 class User implements UserInterface
 {
@@ -58,13 +59,13 @@ class User implements UserInterface
      */
     private $password;
 
-	/**
-	 * @Assert\NotBlank()
-	 * @Assert\Expression(
-	 *     "this.getPassword === this.getRetypedPassword()",
-	 *     message="passwords don't match"
-	 * )
-	 */
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Expression(
+     *     "this.getPassword() === this.getRetypedPassword()",
+     *     message="password don't match"
+     * )
+     */
     private $retypedPassword;
 
     /**
@@ -77,7 +78,7 @@ class User implements UserInterface
 	/**
 	 * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="author")
 	 * @Groups({"read"})
-	 * @Assert\Length(max="25",min="6")
+	 *
 	 */
     private $posts;
 
@@ -123,9 +124,6 @@ class User implements UserInterface
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -142,9 +140,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getPassword(): string
     {
         return (string) $this->password;
