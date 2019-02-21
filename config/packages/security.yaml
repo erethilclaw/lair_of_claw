@@ -6,7 +6,8 @@ security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
+        # app_user_provider:
+        database:
             entity:
                 class: App\Entity\User
                 property: email
@@ -14,14 +15,20 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+        api:
+            pattern: ^/api
+            stateless: true
             anonymous: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
             guard:
-                authenticators:
-                    - App\Security\LoginFormAuthenticator
-            logout:
-                path: logout
-                target: wellcome
+                authenticator:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+#            logout:
+#                path: logout
+#                target: wellcome
 
             # activate different ways to authenticate
 
@@ -34,5 +41,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/api/login, roles: IS_AUTHENTICATHED_ANONYMOUSLY }
+         - { path: ^/api,       roles: ROLE_ADMIN }
+         #- { path: ^/api,       roles: IS_AUTHENTICATHED_FULLY }
+         #- { path: ^/admin, roles: ROLE_ADMIN }
          #- { path: ^/profile, roles: ROLE_USER }
