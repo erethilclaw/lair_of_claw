@@ -7,8 +7,18 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ApiResource(
- *     itemOperations={"get"},
- *     collectionOperations={"get"}
+ *     itemOperations={
+ *     "get",
+ *     "put"={
+ *     "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY') and object.getAuthor() == user"
+ *          }
+ *      },
+ *     collectionOperations={
+ *     "get",
+ *     "post"={
+ *     "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY')"
+ *          }
+ *      }
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
  */

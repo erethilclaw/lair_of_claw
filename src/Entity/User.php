@@ -14,9 +14,36 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ApiResource(
- *     itemOperations={"get"},
- *     collectionOperations={"post"},
- *     normalizationContext={
+ *     itemOperations={
+ *     "get"={
+ *          "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY')",
+ *           "normalization_context"={
+ *			"groups"={"get"}
+ *              }
+ *          }
+ *     "put"={
+ *          "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY') and object == user",
+ *           "denormalization_context"={
+ *          "groups"={"put"}
+ *              },
+ *           "normalization_context"={
+ *			"groups"={"get"}
+ *              }
+ *          }
+ *          }
+ *     },
+ *     collectionOperations={
+ *          "post"={
+ *              "denormalization_context"={
+ *          "groups"={"post"}
+ *              },
+ *               "normalization_context"={
+ *			"groups"={"get"}
+ *              }
+ *          }
+ *          }
+ *      },
+ *     "normalization_context"={
  *     "groups"={"read"}
  *     }
  * )
@@ -35,7 +62,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"read"})
+     * @Groups({"post","put"})
      * @Assert\NotBlank()
      * @Assert\Email()
      * @Assert\Length(max="25",min="6")
@@ -56,6 +83,7 @@ class User implements UserInterface
      *     pattern="/(?=.*[A-Z])(?=.*[0-9]).{7,}/",
      *     message="Password need at least, mayus, number"
      * )
+     * @Groups({"put","post"})
      */
     private $password;
 
@@ -65,19 +93,20 @@ class User implements UserInterface
      *     "this.getPassword() === this.getRetypedPassword()",
      *     message="password don't match"
      * )
+     *  @Groups({"put","post"})
      */
     private $retypedPassword;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
-     * @Groups({"read"})
+     * @Groups({"get","post","put"})
      * @Assert\NotBlank()
      */
     private $alias;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="author")
-	 * @Groups({"read"})
+	 * @Groups({"read","post"})
 	 *
 	 */
     private $posts;
