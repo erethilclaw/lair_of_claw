@@ -6,26 +6,31 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
  * @ApiResource(
  *     itemOperations={
- *     "get",
- *     "put"={
- *     "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY') and object.getAuthor() == user"
+ *          "get",
+ *          "put"={
+ *                  "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY') and object.getAuthor() == user"
  *          }
  *      },
  *     collectionOperations={
- *     "get",
- *     "post"={
- *     "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY')"
+ *          "get",
+ *          "post"={
+ *                  "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY')"
  *          }
- *      }
+ *      },
+ *     denormalizationContext={
+ *          "groups"={"post"}
+ *     }
  * )
  */
-class Post
+class Post implements AuthoredEntityInterface, PublishedDateEntityInterface
 {
     /**
      * @ORM\Id()
@@ -37,18 +42,21 @@ class Post
     /**
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
+     * @Groups({"post"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank()
+     * @Groups({"post"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
+     * @Groups({"post"})
      */
     private $content;
 
@@ -56,13 +64,13 @@ class Post
      * @ORM\Column(type="datetime", nullable=true)
      * @Assert\DateTime()
      * @Assert\NotBlank()
+     * @Groups({"post"})
      */
     private $publishedAt;
 
     /**
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
-     * @Assert\NotBlank()
      */
     private $createAt;
 
@@ -78,7 +86,6 @@ class Post
     private $comments;
 
 	public function __construct() {
-         		$this->createAt = new \DateTime('now');
 				$this->comments = new ArrayCollection();
          	}
 
@@ -148,12 +155,18 @@ class Post
         return $this;
     }
 
-    public function getAuthor(): User
+    public function setPublished( \DateTimeInterface $published ): PublishedDateEntityInterface {
+	    $this->createAt = $published;
+
+	    return $this;
+    }
+
+	public function getAuthor(): User
     {
         return $this->author;
     }
 
-    public function setAuthor(User $author): self
+    public function setAuthor(UserInterface $author): AuthoredEntityInterface
     {
         $this->author = $author;
 

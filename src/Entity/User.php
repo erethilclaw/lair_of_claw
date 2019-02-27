@@ -15,37 +15,32 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ApiResource(
  *     itemOperations={
- *     "get"={
- *          "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY')",
- *           "normalization_context"={
- *			"groups"={"get"}
+ *          "get"={
+ *              "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY')",
+ *               "normalization_context"={
+ *			        "groups"={"get"}
  *              }
- *          }
- *     "put"={
- *          "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY') and object == user",
- *           "denormalization_context"={
- *          "groups"={"put"}
+ *          },
+ *          "put"={
+ *              "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY') and object == user",
+ *              "denormalization_context"={
+ *                  "groups"={"put"}
  *              },
- *           "normalization_context"={
- *			"groups"={"get"}
+ *              "normalization_context"={
+ *			        "groups"={"get"}
  *              }
- *          }
  *          }
  *     },
  *     collectionOperations={
  *          "post"={
  *              "denormalization_context"={
- *          "groups"={"post"}
+ *                  "groups"={"post"}
  *              },
- *               "normalization_context"={
- *			"groups"={"get"}
+ *              "normalization_context"={
+ *                  "groups"={"get"}
  *              }
  *          }
- *          }
- *      },
- *     "normalization_context"={
- *     "groups"={"read"}
- *     }
+ *      }
  * )
  * @UniqueEntity(fields={"alias"})
  * @UniqueEntity(fields={"email"})
