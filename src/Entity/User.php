@@ -51,7 +51,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"read"})
+     * @Groups({"get"})
      */
     private $id;
 
@@ -94,21 +94,21 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
-     * @Groups({"get","post","put"})
+     * @Groups({"get","post","put","get-comment-with-author","get-post-with-author"})
      * @Assert\NotBlank()
      */
     private $alias;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="author")
-	 * @Groups({"read","post"})
+	 * @Groups({"get","post"})
 	 *
 	 */
     private $posts;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="author")
-	 * @Groups({"read"})
+	 * @Groups({"get"})
 	 */
     private $comments;
 

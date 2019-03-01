@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +15,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
  * @ApiResource(
  *     itemOperations={
- *          "get",
+ *          "get"={
+ *					"normalization_context"={
+ *                      "groups"={"get-post-with-author"}
+ *              }
+ *          },
  *          "put"={
  *                  "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY') and object.getAuthor() == user"
  *          }
@@ -36,27 +41,28 @@ class Post implements AuthoredEntityInterface, PublishedDateEntityInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get-post-with-author"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
-     * @Groups({"post"})
+     * @Groups({"post","get-post-with-author"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank()
-     * @Groups({"post"})
+     * @Groups({"post","get-post-with-author"})
      */
     private $slug;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank()
-     * @Groups({"post"})
+     * @Groups({"post","get-post-with-author"})
      */
     private $content;
 
@@ -64,7 +70,7 @@ class Post implements AuthoredEntityInterface, PublishedDateEntityInterface
      * @ORM\Column(type="datetime", nullable=true)
      * @Assert\DateTime()
      * @Assert\NotBlank()
-     * @Groups({"post"})
+     * @Groups({"post","get-post-with-author"})
      */
     private $publishedAt;
 
@@ -77,11 +83,14 @@ class Post implements AuthoredEntityInterface, PublishedDateEntityInterface
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="posts")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get-post-with-author"})
      */
     private $author;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post")
+	 * @ApiSubresource()
+	 * @Groups({"get-post-with-author"})
 	 */
     private $comments;
 

@@ -10,15 +10,20 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     itemOperations={
- *     "get",
- *     "put"={
- *     "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY') and object.getAuthor() == user"
+ *          "get",
+ *          "put"={
+ *              "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY') and object.getAuthor() == user"
  *          }
  *      },
  *     collectionOperations={
- *     "get",
- *     "post"={
- *     "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY')"
+ *          "get",
+ *          "post"={
+ *              "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY')"
+ *          },
+ *          "api_posts_comments_get_subresource"={
+ *              "normalization_context"={
+ *                  "groups"={"get-comment-with-author"}
+ *              }
  *          }
  *      },
  *     denormalizationContext={
@@ -33,29 +38,33 @@ class Comment implements AuthoredEntityInterface, PublishedDateEntityInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"get-comment-with-author"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"post"})
+     * @Groups({"post","get-comment-with-author"})
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"get-comment-with-author"})
      */
     private $published;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get-comment-with-author"})
      */
     private $author;
 
 	/**
 	 * @ORM\ManyToOne(targetEntity="App\Entity\Post", inversedBy="comments")
 	 * @ORM\JoinColumn(nullable=false)
+	 * @Groups({"post"})
 	 */
     private $post;
 
