@@ -16,13 +16,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ApiResource(
  *     itemOperations={
  *          "get"={
- *              "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY')",
+ *              "access_control"="is_granted('IS_AUTHENTICATHED_FULLY')",
  *               "normalization_context"={
  *			        "groups"={"get"}
  *              }
  *          },
  *          "put"={
- *              "acces_control"="is_granted('IS_AUTHENTICATHED_FULLY') and object == user",
+ *              "access_control"="is_granted('IS_AUTHENTICATHED_FULLY') and object == user",
  *              "denormalization_context"={
  *                  "groups"={"put"}
  *              },
@@ -47,6 +47,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class User implements UserInterface
 {
+	const ROLE_COMMENTATOR = 'ROLE_COMMENTATOR';
+	const ROLE_WRITER = 'ROLE_WRITER';
+	const ROLE_EDITOR = 'ROLE_EDITOR';
+	const ROLE_ADMIN = 'ROLE_ADMIN';
+	const ROLE_SUPERADMIN = 'ROLE_SUPERADMIN';
+
+	const DEFAULT_ROLES = [self::ROLE_COMMENTATOR];
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -65,10 +72,10 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="json")
-     * @Groups({"read"})
+     * @ORM\Column(type="simple_array", length=200)
+     * @Groups({"get"})
      */
-    private $roles = [];
+    private $roles;
 
     /**
      * @var string The hashed password
@@ -118,6 +125,7 @@ class User implements UserInterface
 	public function __construct() {
 		$this->posts = new ArrayCollection();
 		$this->comments = new ArrayCollection();
+		$this->roles = self::DEFAULT_ROLES;
 	}
 
 
@@ -150,18 +158,12 @@ class User implements UserInterface
 
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+    	return $this->roles;
     }
 
-    public function setRoles(array $roles): self
+    public function setRoles(array $roles)
     {
         $this->roles = $roles;
-
-        return $this;
     }
 
     public function getPassword(): string
@@ -181,7 +183,7 @@ class User implements UserInterface
      */
     public function getSalt()
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+        return null;
     }
 
     /**
